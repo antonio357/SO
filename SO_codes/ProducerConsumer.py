@@ -17,28 +17,28 @@ threading.Condition(mutex)
 def fill_buffer():
 
     while True:
-        mutex.acquire()
 
         if len(buffer) < BUFFER_SIZE:
+            mutex.acquire()
             value = randint(0, 9)
             buffer.append(value)
             sleep(2)
             print("Produced ", value, ", len(buffer) = ", len(buffer))
 
-        mutex.release()
+            mutex.release()
 
 
 def consume_buffer():
 
     while True:
-        mutex.acquire()
 
         if len(buffer) > 0:
+            mutex.acquire()
             value = buffer.pop(0)
             sleep(2)
             print("Consumed ", value, ", len(buffer) = ", len(buffer))
 
-        mutex.release()
+            mutex.release()
 
 
 producer = threading.Thread(target=fill_buffer)
