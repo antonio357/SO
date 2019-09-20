@@ -20,19 +20,32 @@ def test(i, LEFT, RIGHT):
         states[i] = EATING
         semaphores[i].release()
 
+def verify():
+    for i in range(N):
+        left = (i + N - 1) % N
+        right = (i + 1) % N
+        left_sum = states[i] + states[left]
+        right_sum = states[i] + states[right]
+        if left_sum == EATING * 2 or right_sum == EATING * 2:
+            return False
+        return True
 
 def think():
     mutex.acquire()
+    if verify() is False:
+        print(states)
+        while True:
+            print("deu treta")
     print(states)
     mutex.release()
-    sleep(3)
+    # sleep(3)
 
 
 def eat():
     mutex.acquire()
     print(states)
     mutex.release()
-    sleep(3)
+    # sleep(3)
 
 
 def take_forks(i, LEFT, RIGHT):

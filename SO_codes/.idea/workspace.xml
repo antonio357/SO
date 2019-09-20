@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="17ae8037-820b-4a82-8906-34b04c8e0ddc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test1.py" beforeDir="false" afterPath="$PROJECT_DIR$/test1.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -138,7 +139,7 @@
       <option name="presentableId" value="Default" />
       <updated>1568079771142</updated>
       <workItem from="1568079772459" duration="17440000" />
-      <workItem from="1568939733319" duration="5605000" />
+      <workItem from="1568939733319" duration="6981000" />
     </task>
     <servers />
   </component>
@@ -157,6 +158,6 @@
     </option>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/SO_codes$test1.coverage" NAME="test1 Coverage Results" MODIFIED="1568945883462" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/SO_codes$test1.coverage" NAME="test1 Coverage Results" MODIFIED="1568947349628" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
