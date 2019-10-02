@@ -20,6 +20,7 @@ def test(i, LEFT, RIGHT):
         states[i] = EATING
         semaphores[i].release()
 
+
 def verify():
     for i in range(N):
         left = (i + N - 1) % N
@@ -30,12 +31,9 @@ def verify():
             return False
         return True
 
+
 def think():
     mutex.acquire()
-    if verify() is False:
-        print(states)
-        while True:
-            print("deu treta")
     print(states)
     mutex.release()
     # sleep(3)
@@ -70,6 +68,7 @@ def philosopher(i, LEFT, RIGHT):
         take_forks(i, LEFT, RIGHT)
         eat()
         put_forks(i, LEFT, RIGHT)
+
 
 threads = []
 for i in range(N):
