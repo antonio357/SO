@@ -1,51 +1,51 @@
-from threading import Lock, Thread
+from threading import Lock, Thread, Condition
 from time import sleep
 from random import randint
 
-N = 0
+N = 5
 THINKING = 0
 HUNGRY = 1
 EATING = 2
 
 philosophers_state = [0, 0, 0, 0, 0]
 mutex = Lock()
+condition = Condition(mutex)
 
 
 def think(index):
-    mutex.acquire()
+    condition.acquire()
     philosophers_state[index] = HUNGRY
-    mutex.release()
+    condition.release()
 
 
 def eat():
-    sleep(randint(0, 3))
-    mutex.acquire()
+    condition.acquire()
     print(philosophers_state)
-    mutex.release()
+    condition.release()
+    sleep(randint(0, 3))
 
 
 def take_forks(index, left, right):
-    mutex.acquire()
-    if philosophers_state[left] != EATING and philosophers_state[right] != EATING:
-        philosophers_state[index] = EATING
-    mutex.release()
+    condition.acquire()
+    while not (philosophers_state[left] != EATING and philosophers_state[right] != EATING):
+        condition.wait()
+    philosophers_state[index] = EATING
+    condition.release()
 
 
 def put_forks(index):
-    mutex.acquire()
+    condition.acquire()
     philosophers_state[index] = THINKING
-    mutex.release()
+    condition.notify()
+    condition.release()
 
 
 def philosopher(index, left, right):
     while True:
-        # think(index)
-        # take_forks(index, left, right)
-        # eat()
-        # put_forks(index)
-        mutex.acquire()
-        print("ok")
-        mutex.release()
+        think(index)
+        take_forks(index, left, right)
+        eat()
+        put_forks(index)
 
 
 threads = []
