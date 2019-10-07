@@ -4,14 +4,14 @@ from time import sleep
 mutex = Lock()
 condition = Condition(mutex)
 
-SLEEPING = 0
-AWAKE = 1
-CUTTING = 2
-CLIENT = 3
+SLEEPING = "zzz"
+AWAKE = "\o/"
+CUTTING = "><><"
+CLIENT = "$"
 
-n_barbers = 1
+n_barbers = 2
 barbers_states = []
-n_waiting_chairs = 10
+n_waiting_chairs = 14
 
 barbers = []
 clients = []
@@ -25,28 +25,43 @@ class Barber(Thread):
 
     def sleep_on_chair(self):
         condition.acquire()
+
         if len(clients) == 0:
             barbers_states[self.index] = SLEEPING
-            print("barber is sleeping cause did not found any client")
+            print("barber", self.index, "sleeping")
+            print("barbers = ", barbers_states)
             condition.wait()
+
             barbers_states[self.index] = AWAKE
-            print("a client has woke up the barber")
+            print("barber", self.index, "woke up")
+            print("barbers = ", barbers_states)
+
         condition.release()
 
     def cut_hair(self):
         condition.acquire()
+
         if len(clients) > 0:
             clients.pop(0)
-            print("barber has found a client")
             barbers_states[self.index] = CUTTING
-            print("barber is cutting")
-            condition.notify()
+            print("barber", self.index, "cutting")
+            print("barbers = ", barbers_states)
+            print("clients waiting = ", len(clients), '/', n_waiting_chairs)
+
+            if len(clients) == 0:
+                barbers_states[self.index] = SLEEPING
+                print("barber", self.index, "sleeping")
+                print("barbers = ", barbers_states)
+
         condition.release()
 
     def run(self):
         while True:
             self.sleep_on_chair()
+            sleep(3)
             self.cut_hair()
+            sleep(3)
+            self
 
 
 # class Client(Thread):
@@ -75,26 +90,26 @@ class ClientGenerator(Thread):
         condition.acquire()
         if len(clients) < n_waiting_chairs:
             clients.append(CLIENT)
-            print("A client has arrived")
-            condition.notify_all()
+            print("new client")
+            print("clients waiting = ", len(clients), '/', n_waiting_chairs)
+            condition.notify(1)
 
         elif len(clients) == n_waiting_chairs:
-            print("A client was not able to take a chair to wait")
-            condition.notify_all()
-            condition.wait()
+            print("barber shop full")
+            # condition.notify_all()
         condition.release()
 
     def show_info(self):
         condition.acquire()
-        print("clients = ", len(clients), '/', n_waiting_chairs)
+        print("clients waiting = ", len(clients), '/', n_waiting_chairs)
         print("barbers = ", barbers_states)
         condition.release()
-        sleep(3)
 
     def run(self):
         while True:
             self.generate()
-            self.show_info()
+            sleep(3)
+            # self.show_info()
 
 
 for i in range(n_barbers):
