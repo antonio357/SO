@@ -1,8 +1,10 @@
 from threading import Thread, Lock, Condition
 from time import sleep
+from random import randint
 
 mutex = Lock()
 condition = Condition(mutex)
+condition1 = Condition(mutex)
 
 SLEEPING = "zzz"
 AWAKE = "\o/"
@@ -30,11 +32,20 @@ class Barber(Thread):
             barbers_states[self.index] = SLEEPING
             print("barber", self.index, "sleeping")
             print("barbers = ", barbers_states)
-            condition.wait()
+            print("clients waiting = ", len(clients), '/', n_waiting_chairs)
+            condition.wait()  # for this thread wait until generator generate
 
             barbers_states[self.index] = AWAKE
             print("barber", self.index, "woke up")
             print("barbers = ", barbers_states)
+
+        if len(clients) > 0:
+            clients.pop(0)
+            barbers_states[self.index] = CUTTING
+            print("barber", self.index, "cutting")
+            print("barbers = ", barbers_states)
+            print("clients waiting = ", len(clients), '/', n_waiting_chairs)
+            condition1.notify()  # for generator wake up
 
         condition.release()
 
@@ -47,38 +58,22 @@ class Barber(Thread):
             print("barber", self.index, "cutting")
             print("barbers = ", barbers_states)
             print("clients waiting = ", len(clients), '/', n_waiting_chairs)
+            condition1.notify()  # for generator wake up
 
-            if len(clients) == 0:
-                barbers_states[self.index] = SLEEPING
-                print("barber", self.index, "sleeping")
-                print("barbers = ", barbers_states)
+        if len(clients) == 0:
+            barbers_states[self.index] = SLEEPING
+            print("barber", self.index, "sleeping")
+            print("barbers = ", barbers_states)
+            print("clients waiting = ", len(clients), '/', n_waiting_chairs)
+            condition.wait()  # for this thread wait until generator generate
 
         condition.release()
 
     def run(self):
         while True:
             self.sleep_on_chair()
-            sleep(3)
             self.cut_hair()
-            sleep(3)
-            self
-
-
-# class Client(Thread):
-#
-#     def __init__(self):
-#         Thread.__init__(self)
-#
-#     def awake(self):
-#         condition.acquire()
-#         if clients.index(object=self) == 0:
-#             condition.notify()
-#
-#         condition.release()
-#
-#     def run(self):
-#         while True:
-#             self.awake()
+            # sleep(randint(0, 3))
 
 
 class ClientGenerator(Thread):
@@ -92,24 +87,17 @@ class ClientGenerator(Thread):
             clients.append(CLIENT)
             print("new client")
             print("clients waiting = ", len(clients), '/', n_waiting_chairs)
-            condition.notify(1)
+            condition.notify()  # to wake the sleepy barbers
 
         elif len(clients) == n_waiting_chairs:
             print("barber shop full")
-            # condition.notify_all()
-        condition.release()
-
-    def show_info(self):
-        condition.acquire()
-        print("clients waiting = ", len(clients), '/', n_waiting_chairs)
-        print("barbers = ", barbers_states)
+            condition1.wait()  # for generator sleep until barber cut hair
         condition.release()
 
     def run(self):
         while True:
             self.generate()
-            sleep(3)
-            # self.show_info()
+            # sleep(randint(0, 3))
 
 
 for i in range(n_barbers):
