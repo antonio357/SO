@@ -1,19 +1,20 @@
-from threading import Thread, Lock, Condition
+from threading import Thread, Lock, Condition, Semaphore
 from time import sleep
 from random import randint
 
 mutex = Lock()
 condition = Condition(mutex)
 condition1 = Condition(mutex)
+semaphore = Semaphore()
 
 SLEEPING = "zzz"
 AWAKE = "\o/"
 CUTTING = "><><"
 CLIENT = "$"
 
-n_barbers = 2
+n_barbers = 3
 barbers_states = []
-n_waiting_chairs = 14
+n_waiting_chairs = 15
 
 barbers = []
 clients = []
@@ -73,8 +74,7 @@ class Barber(Thread):
         while True:
             self.sleep_on_chair()
             self.cut_hair()
-            # sleep(randint(0, 3))
-
+            sleep(randint(0, 3))
 
 class ClientGenerator(Thread):
 
