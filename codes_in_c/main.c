@@ -110,7 +110,7 @@ int executeProcess(struct Process* process) {
 // ajusta o tempo esperado de todos os processos que estão no escalonador
 void caculateWaitTimeRoundRobin(struct Process queue[], int size, int actual_time, int executionTime, int actualRunningProcessID) {
     for (int i = 0; i < size; i++) {
-        if (queue[i].processID != actualRunningProcessID && processHasArrived(queue[i], actual_time) == true) 
+        if (queue[i].processID != actualRunningProcessID && processHasArrived(queue[i], actual_time) == true && queue[i].leftTimeToExecute > 0)
             queue[i].waitTime += executionTime;
     }
     
@@ -124,12 +124,20 @@ int stillHaveProcess(struct Process queue[], int size) {
     return false;
 }
 
+void printQueue(struct Process queue[], int size, int actual_time) {
+    printf("actual_time = %d\n", actual_time);
+    printf ("processingTime | leftTimeToExecute | waitTime | arrivalTime\n");
+    for (int i = 0; i < size; ++i) {
+        printf("\t %d \t\t%d \t\t%d \t % d\n", queue[i].processingTime, queue[i].leftTimeToExecute, queue[i].waitTime, queue[i].arrivalTime);
+    }
+}
+
 // Round Robin
 void roundRobin(struct Process queue[], int size) {
     int actual_time = 0; // registra quanto tempo se passou desde a cpu começou a rodar o primeiro processo
     int remainingTime; 
     int executionTime;
-
+//    printQueue(queue, size, actual_time);
     while (true) {
         executionTime = 0;
 
@@ -137,15 +145,18 @@ void roundRobin(struct Process queue[], int size) {
             if (processHasArrived(queue[i], actual_time) == true && queue[i].leftTimeToExecute > 0) {
                 remainingTime = executeProcess(&(queue[i])); // tempo restante do quantumTime cedido ao processo 
                 executionTime = quantumTime - remainingTime; // tempo que o processo passou executando
-                actual_time += executionTime;
-                
+
                 caculateWaitTimeRoundRobin(queue, size, actual_time, executionTime, queue[i].processID);
+                // debugging
+//                printQueue(queue, size, actual_time);
+                actual_time += executionTime;
             }
         }
 
         /* é necessario caso ocorra de os processos no escalonador todos terminarem de executar 
         e ainda ter processos que não atingiram seu arrivaltime */
-        actual_time += quantumTime; // faz o actual time funcionar como relógio
+        if (executionTime == 0 )
+            actual_time += quantumTime; // faz o actual time funcionar como relógio
 
         if (executionTime == 0 && stillHaveProcess(queue, size) == false) break; 
     }

@@ -1,0 +1,3 @@
+C:/Users/carlo/Desktop/IFPB - Eng. Comp/Sistemas Operacionais/repo's/SO/codes_in_c/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/carlo/Desktop/IFPB - Eng. Comp/Sistemas Operacionais/repo's/SO/codes_in_c/cmake-build-debug/CMakeFiles/main.dir
+C:/Users/carlo/Desktop/IFPB - Eng. Comp/Sistemas Operacionais/repo's/SO/codes_in_c/cmake-build-debug/CMakeFiles/rebuild_cache.dir

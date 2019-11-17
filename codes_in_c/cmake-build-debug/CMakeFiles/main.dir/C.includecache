@@ -1,0 +1,12 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/carlo/Desktop/IFPB - Eng. Comp/Sistemas Operacionais/repo's/SO/codes_in_c/main.c
+stdio.h
+-
+
